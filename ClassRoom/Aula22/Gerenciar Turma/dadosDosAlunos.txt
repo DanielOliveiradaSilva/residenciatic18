@@ -7,3 +7,4 @@ Lorena ,lorenaandrade@gmail.com ,100,100
 Gabriel,hernandes@gmail.com,70.8,80.19
 gabriel,gabriel,2,4
 joao,joap@gmail.com,79,80
+samuel,samuel.meida@gmail.com,70,88
