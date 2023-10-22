@@ -27,6 +27,18 @@ void Ctrl_RedeSocial:: criarConta(Usuario &novo){
     usuarios_do_twitter.push_back(novo);
 }
 
+void Ctrl_RedeSocial::seguirPerfil(Usuario &usuario){
+    int token_acesso;
+    token(usuario.getUsername(), token_acesso);
+    usuarios_do_twitter[token_acesso] = usuario;
+}
+
+
+Usuario  Ctrl_RedeSocial::  getUsuario(int &token_acesso){
+
+    return usuarios_do_twitter[token_acesso];
+}
+
 Ctrl_RedeSocial::~Ctrl_RedeSocial(){}
 
 vector<Usuario> Ctrl_RedeSocial:: usuarios_do_twitter = {

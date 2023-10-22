@@ -17,6 +17,8 @@ public:
     static Usuario acessarConta(string username, bool &request);
     static void criarConta(Usuario &novo);
     static bool token(string username, int &token_acesso);
+    static void seguirPerfil(Usuario &usuario);
+    static Usuario getUsuario(int &token_acesso);
 
     
 };

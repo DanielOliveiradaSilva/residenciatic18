@@ -1,5 +1,6 @@
 #include "interface.h"
-
+#include <cstdlib> // para a função rand
+#include <ctime>  
 void loadingAnimation() {
     const int totalDots = 10;
     
@@ -22,6 +23,51 @@ void loadingAnimation() {
 
 void clearScreen() {
     system("clear");
+}
+void seguir_usuario(bool &loggedIn, Usuario &usuario) {
+    cin.ignore();
+    string username;
+    cout << "@username:";
+    getline(cin, username);
+    bool token;
+    int request;
+
+    token = Ctrl_RedeSocial::token(username, request);
+
+    // Inicialize a semente de randomização com o tempo atual
+    srand(static_cast<unsigned>(time(nullptr)));
+
+    // Crie um vetor de palavras depreciativas
+    vector<string> palavrasDepreciativas = {"idiota", "chata", "insuportável", "inconveniente", "estúpida", "duvidosa", "corrupta", "violenta", "homofobica"};
+
+    // Sorteie uma palavra depreciativa do vetor
+    int indiceSorteado = rand() % palavrasDepreciativas.size();
+    string palavraSorteada = palavrasDepreciativas[indiceSorteado];
+
+    if (token) {
+        Usuario perfil = Ctrl_RedeSocial::getUsuario(request);
+        string nomeUsuario = perfil.getUsername(); // Obtém o nome de usuário do perfil
+
+        // Monta a frase com o nome de usuário depreciativo e a palavra depreciativa
+        string frase = "Tem certeza que deseja seguir essa pessoal " + palavraSorteada + "? s/n:";
+        
+        cout << frase; // Mostra a frase ao usuário
+
+        string confirmacao;
+        getline(cin, confirmacao);
+
+        if (confirmacao == "S" || confirmacao == "s") {
+            usuario.setSeguir(perfil);
+            Ctrl_RedeSocial::seguirPerfil(usuario);
+            cout <<"You followed @" << username <<"!"<<endl;
+
+        } else {
+            cout << "Sua amizade é questionável!" << endl;
+            PageTwitterConected(loggedIn, usuario);
+        }
+    } else {
+        cout << "Usuário não encontrado" << endl;
+    }
 }
 
 void PageTwitterConected(bool &loggedIn, Usuario &usuario){
@@ -54,8 +100,9 @@ void PageTwitterConected(bool &loggedIn, Usuario &usuario){
                     //cout << "Fazer uma postagem..." << endl;
                     break;
                 case 3:
-                    // Lógica para seguir uma pessoa
-                    //cout << "Seguir uma pessoa..." << endl;
+                    cout << "Seguir uma pessoa..." << endl;
+                    seguir_usuario(loggedIn, usuario);
+                    //salvar;
                     break;
                 case 4:
                     //cout << "Saindo..." << endl;
@@ -75,6 +122,7 @@ void PageTwitterConected(bool &loggedIn, Usuario &usuario){
 
 void login()
 {
+    clearScreen();
     loadingAnimation();
     clearScreen();
     Usuario usuario;
@@ -98,6 +146,7 @@ void login()
     }
 }
 void registerUsuario(){
+    clearScreen();
     loadingAnimation();
     clearScreen();
     cin.ignore();
@@ -150,19 +199,19 @@ void PageTwitter() {
         switch (opcao) {
             case 1:
                 cout << "Opção de Login selecionada." << endl;
-                clearScreen();
+                
                 login();
                 // Chame a função de login aqui
                 break;
             case 2:
                 cout << "Opção de cadastro selecionada." << endl;
-                clearScreen();
+                
                 registerUsuario();
                 // Substitua este comentário pela lógica de cadastro.
                 break;
             case 3:
                 cout << "Saindo do Twitter." << endl;
-                //vá para pagina admin.
+                exit(0);
                 return;
             default:
                 cout << "Opção inválida. Tente novamente." << endl;
