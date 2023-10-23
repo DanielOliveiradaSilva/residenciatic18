@@ -1,5 +1,6 @@
 #include "ctrl_RedeSocial.h"
 
+
 Ctrl_RedeSocial::Ctrl_RedeSocial(/* args */){}
 
 Usuario Ctrl_RedeSocial:: acessarConta(string username, bool &request){
@@ -27,10 +28,52 @@ void Ctrl_RedeSocial:: criarConta(Usuario &novo){
     usuarios_do_twitter.push_back(novo);
 }
 
+void Ctrl_RedeSocial:: adicionarPoster(Usuario &usuario){
+    cin.ignore();
+    string descricao, data;
+    
+    cout<<"Descreva:" <<endl;
+    getline(cin, descricao);
+    
+    cout<<"Data:"<<endl;
+    getline(cin,data);
+
+    Twitter poster(usuario, descricao, data);
+    postagens_do_twitter.push_back(poster);
+
+}
+
 void Ctrl_RedeSocial::seguirPerfil(Usuario &usuario){
     int token_acesso;
     token(usuario.getUsername(), token_acesso);
     usuarios_do_twitter[token_acesso] = usuario;
+}
+
+void Ctrl_RedeSocial::timeline(Usuario &usuario) {
+    vector<Usuario> amigos = usuario.getSeguindo();
+    vector<Twitter> postagem_dos_amigos;
+
+    for (size_t i = 0; i < amigos.size(); i++) {
+        for (Twitter &post : postagens_do_twitter) {
+            if (post.getAutor() == amigos[i]) {
+                postagem_dos_amigos.push_back(post);
+            }
+        }
+    }
+
+    // Sort the posts in chronological order based on the creation date.
+    sort(postagem_dos_amigos.begin(), postagem_dos_amigos.end(), 
+        [](Twitter &a, Twitter &b) {
+            return a.getData_criacao() > b.getData_criacao();
+        });
+
+    // Now, postagem_dos_amigos contains the combined posts of all friends sorted by date.
+    // You can display these posts in chronological order.
+    for (Twitter &post : postagem_dos_amigos) {
+        cout << "@" << post.getAutor().getUsername() << " tweeted on " << post.getData_criacao() << ":\n";
+        cout << post.getConteudo() << "\n";
+        cout << "------------------------------------\n";
+    }
 }
 
 
@@ -41,16 +84,19 @@ Usuario  Ctrl_RedeSocial::  getUsuario(int &token_acesso){
 
 Ctrl_RedeSocial::~Ctrl_RedeSocial(){}
 
-vector<Usuario> Ctrl_RedeSocial:: usuarios_do_twitter = {
-    Usuario("oliveira4552", "Daniel Oliveira da silva"),
-    Usuario("lorena", "Lorena Andrade"),
-    Usuario("diascarlos", "Caros Dias")
+// ...
+vector<Usuario> Ctrl_RedeSocial::usuarios_do_twitter = {
+    Usuario("oliveira4552", "Daniel Oliveira da silva",  Usuario("oliveira4552", "Daniel Oliveira da silva")),
+    Usuario("lorena", "Lorena Andrade", Usuario("lorena", "Lorena Andrade")),
+    Usuario("diascarlos", "Caros Dias", Usuario("diascarlos", "Caros Dias"))
 };
-vector<Twitter>Ctrl_RedeSocial:: postagens_do_twitter = {
-    Twitter(Usuario("oliveira4552", "Daniel Oliveira da silva"), "Eu amo morrango!", "20/03/2023"),
-    Twitter(Usuario("oliveira4552", "Daniel Oliveira da silva"), "Adotei um pet!", "28/05/2023"),
-    Twitter(Usuario("oliveira4552", "Daniel Oliveira da silva"), "Virei vegano :)!", "20/03/2023"),
-    Twitter(Usuario("lorena", "Lorena Andrade"), "Sou mãe de dois filhos!", "20/05/2015"),
-    Twitter(Usuario("lorena", "Lorena Andrade"), "Casei aos 19 anos, e sou feliza!", "16/07/2017"),
-    Twitter(Usuario("diascarlos", "Caros Dias"), "Os importos acabam com meu salario de 9.5k ;-;", "16/10/2023"),
+
+vector<Twitter> Ctrl_RedeSocial::postagens_do_twitter = {
+    Twitter(usuarios_do_twitter[0], "Eu amo morango!", "20/03/2023"),
+    Twitter(usuarios_do_twitter[0], "Adotei um pet!", "28/05/2023"),
+    Twitter(usuarios_do_twitter[0], "Virei vegano :)!", "20/03/2023"),
+    Twitter(usuarios_do_twitter[1], "Sou mãe de dois filhos!", "20/05/2015"),
+    Twitter(usuarios_do_twitter[1], "Casei aos 19 anos, e sou feliz!", "16/07/2017"),
+    Twitter(usuarios_do_twitter[2], "Os impostos acabam com meu salário de 9.5k ;-;", "16/10/2023")
 };
+

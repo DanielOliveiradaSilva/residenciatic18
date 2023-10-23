@@ -69,7 +69,27 @@ void seguir_usuario(bool &loggedIn, Usuario &usuario) {
         cout << "Usuário não encontrado" << endl;
     }
 }
-
+void exibirTimeline(bool &loggedIn, Usuario &usuario){
+    loadingAnimation();
+    clearScreen();
+    Ctrl_RedeSocial::timeline(usuario);
+    string confirmar;
+    cin.ignore();
+    cout<<"Atualizar? s/n:";
+    getline(cin, confirmar);
+    if (confirmar =="S" || confirmar == "s")
+    {
+        exibirTimeline(loggedIn,usuario);
+    }else{
+        PageTwitterConected(loggedIn, usuario);
+    }
+    
+}
+void postarTwitter(Usuario &usuario){
+    cout <<"Como está se sentindo hoje?"<<endl;
+    Ctrl_RedeSocial::adicionarPoster(usuario);
+    cout<<"Postado com sucesso!";
+}
 void PageTwitterConected(bool &loggedIn, Usuario &usuario){
 
     if (loggedIn) {
@@ -92,12 +112,12 @@ void PageTwitterConected(bool &loggedIn, Usuario &usuario){
 
             switch (opcao) {
                 case 1:
-                    // Lógica para ver a timeline
-                   // cout << "Ver timeline..." << endl;
+                    exibirTimeline(loggedIn, usuario);
                     break;
                 case 2:
                     // Lógica para fazer uma postagem
                     //cout << "Fazer uma postagem..." << endl;
+                    postarTwitter(usuario);
                     break;
                 case 3:
                     cout << "Seguir uma pessoa..." << endl;

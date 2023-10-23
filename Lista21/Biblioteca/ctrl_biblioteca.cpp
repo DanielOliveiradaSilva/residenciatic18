@@ -38,8 +38,7 @@ void ctrl_biblioteca::insere_livro()
     }else{
         acervo.push_back(novoLivro);
     }
-    Usuario novo("daniel");
-    usuarios.push_back(novo);
+    
 }
 
 // Função registrarEmpresimo
